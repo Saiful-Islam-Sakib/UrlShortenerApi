@@ -8,8 +8,15 @@ using UrlShortener.Common.Models;
 
 namespace UrlShortener.ApiService.Service
 {
-    public class ShortUrlService : IShortUrl
+    public class ShortUrlService : IShortUrlService
     {
+        public readonly IUniqueIdGeneratorService _UniqueIdGenerator;
+
+		public ShortUrlService(IUniqueIdGeneratorService uniqueIdGenerator)
+        {
+			_UniqueIdGenerator = uniqueIdGenerator;
+		}
+
         public List<ShortUrl> GetAll()
         {
             throw new NotImplementedException();
@@ -17,7 +24,10 @@ namespace UrlShortener.ApiService.Service
 
         public string MakeUniqueId(string Url)
         {
-			return new UniqueIdGeneratorService().GenerateNextId();
+            // if found in redis do not go to db
+            // if not go to db
+            // save new url or return whatever id is saved
+			return _UniqueIdGenerator.GenerateNextId();
 		}
 
         public string GetUrl(string UniqueId)

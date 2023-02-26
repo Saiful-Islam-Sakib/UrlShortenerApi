@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using UrlShortener.Common.Interface;
+using UrlShortener.ApiService.Interface;
 
 namespace UrlShortener.API.Controllers
 {
@@ -7,8 +7,9 @@ namespace UrlShortener.API.Controllers
 	[Route("[Controller]")]
 	public class UrlShortenerController : ControllerBase
 	{
-		public readonly IShortUrl _ShortUrl;
-		public UrlShortenerController(IShortUrl shortUrl)
+		public readonly IShortUrlService _ShortUrl;
+
+		public UrlShortenerController(IShortUrlService shortUrl)
 		{
 			_ShortUrl = shortUrl;
 		}

@@ -7,14 +7,19 @@ using UrlShortener.ApiService.Interface;
 
 namespace UrlShortener.ApiService.Service
 {
-    public class UniqueIdGeneratorService : IUniqueIdGenerator
+    public class UniqueIdGeneratorService : IUniqueIdGeneratorService
     {
-        public string GenerateNextId()
+        private const int MaxNumberOfBitsInMachineId = 10;
+		private const int MaxNumberOfBitsInSequenceId = 12;
+		public string GenerateNextId()
         {
-            // Twitter SnowFlake Id Generator
-            long timeStamp = ((DateTimeOffset)DateTime.Now).ToUnixTimeMilliseconds();
+			long timeStamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds() << (MaxNumberOfBitsInMachineId + MaxNumberOfBitsInSequenceId);
+            long machineId = 1 << MaxNumberOfBitsInSequenceId;
+            long sequenceId = 1;
 
-            return "ID";
+            long result = timeStamp | machineId | sequenceId;
+
+            return Convert.ToString(result, 16);
         }
     }
 }

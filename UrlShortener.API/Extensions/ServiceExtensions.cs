@@ -15,8 +15,8 @@ namespace UrlShortener.API.Extensions
 
 		public static void ConfigureCommonService(this IServiceCollection services)
 		{
-			services.AddTransient<IShortUrl, ShortUrlService>();
-			services.AddTransient<IUniqueIdGenerator, UniqueIdGeneratorService>();
+			services.AddTransient<IShortUrlService, ShortUrlService>();
+			services.AddTransient<IUniqueIdGeneratorService, UniqueIdGeneratorService>();
 		}
 
 		public static void ConfigureSqlDBContext(this IServiceCollection services, IConfiguration configuration) 
