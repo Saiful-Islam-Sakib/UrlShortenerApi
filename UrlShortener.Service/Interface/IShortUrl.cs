@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UrlShortener.Common.Models;
 
-namespace UrlShortener.Common.Interface
+namespace UrlShortener.ApiService.Interface
 {
 	public interface IShortUrl
 	{

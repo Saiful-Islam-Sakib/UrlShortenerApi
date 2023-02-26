@@ -1,4 +1,4 @@
-﻿using UrlShortener.Common.Interface;
+﻿using UrlShortener.ApiService.Interface;
 using UrlShortener.ApiService.Service;
 
 namespace UrlShortener.API.Extensions
@@ -16,6 +16,7 @@ namespace UrlShortener.API.Extensions
 		public static void ConfigureCommonService(this IServiceCollection services)
 		{
 			services.AddTransient<IShortUrl, ShortUrlService>();
+			services.AddTransient<IUniqueIdGenerator, UniqueIdGeneratorService>();
 		}
 
 		public static void ConfigureSqlDBContext(this IServiceCollection services, IConfiguration configuration) 
