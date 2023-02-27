@@ -3,23 +3,68 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using UrlShortener.ApiService.Interface;
+using UrlShortener.Common.ConfigurationModel;
 
 namespace UrlShortener.ApiService.Service
 {
     public class UniqueIdGeneratorService : IUniqueIdGeneratorService
     {
-        private const int MaxNumberOfBitsInMachineId = 10;
-		private const int MaxNumberOfBitsInSequenceId = 12;
+        private readonly IOptions<SnowFlakeConfigurationSettings> _SnowFlakeConfigurationSettings;
+        private SnowFlakeConfigurationSettings _oSnowFlakeConfigurationSettings;
+		private readonly object _lockingObject = new object();
+		private long _MaxMachineId;
+		private long _MaxSequenceId;
+
+		public UniqueIdGeneratorService(IOptions<SnowFlakeConfigurationSettings> snowFlakeSettings)
+        {
+			_SnowFlakeConfigurationSettings = snowFlakeSettings;
+			_oSnowFlakeConfigurationSettings = _SnowFlakeConfigurationSettings.Value;
+			_MaxMachineId = -1L ^ (-1L << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInMachineId);
+			_MaxSequenceId = -1L ^ (-1L << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId);
+		}
+
+		private void Validate(SnowFlakeConfigurationSettings pSnowFlakeConfigurationSettings)
+		{
+			try
+			{
+				if (pSnowFlakeConfigurationSettings.InitialMachineId > _MaxMachineId || pSnowFlakeConfigurationSettings.InitialMachineId < 0)
+				{
+					throw new ArgumentException($"machine ID must be between 0 and {_MaxMachineId}");
+				}
+
+				if (pSnowFlakeConfigurationSettings.InitialSequenceId > _MaxSequenceId || pSnowFlakeConfigurationSettings.InitialSequenceId < 0)
+				{
+					throw new ArgumentException($"Sequence ID must be between 0 and {_MaxSequenceId}");
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
 		public string GenerateNextId()
         {
-			long timeStamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds() << (MaxNumberOfBitsInMachineId + MaxNumberOfBitsInSequenceId);
-            long machineId = 1 << MaxNumberOfBitsInSequenceId;
-            long sequenceId = 1;
+			try
+			{
+				Validate(_oSnowFlakeConfigurationSettings);
 
-            long result = timeStamp | machineId | sequenceId;
+				lock (_lockingObject)
+				{
+					long timeStamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds() << (_oSnowFlakeConfigurationSettings.MaxNumberOfBitsInMachineId + _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId);
+					long result = timeStamp | (_oSnowFlakeConfigurationSettings.InitialMachineId << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId) | _oSnowFlakeConfigurationSettings.InitialSequenceId;
+					_oSnowFlakeConfigurationSettings.InitialMachineId++;
+					_oSnowFlakeConfigurationSettings.InitialSequenceId++;
 
-            return Convert.ToString(result, 16);
+					return Convert.ToString(result, 16); 
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
         }
     }
 }

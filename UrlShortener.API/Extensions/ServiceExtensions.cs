@@ -1,5 +1,7 @@
-﻿using UrlShortener.ApiService.Interface;
+﻿using Microsoft.Extensions.Configuration;
+using UrlShortener.ApiService.Interface;
 using UrlShortener.ApiService.Service;
+using UrlShortener.Common.ConfigurationModel;
 
 namespace UrlShortener.API.Extensions
 {
@@ -16,7 +18,12 @@ namespace UrlShortener.API.Extensions
 		public static void ConfigureCommonService(this IServiceCollection services)
 		{
 			services.AddTransient<IShortUrlService, ShortUrlService>();
-			services.AddTransient<IUniqueIdGeneratorService, UniqueIdGeneratorService>();
+			services.AddSingleton<IUniqueIdGeneratorService, UniqueIdGeneratorService>();
+		}
+
+		public static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.Configure<SnowFlakeConfigurationSettings>(configuration.GetSection("SnowFlakeConfigurationSettings"));
 		}
 
 		public static void ConfigureSqlDBContext(this IServiceCollection services, IConfiguration configuration) 
