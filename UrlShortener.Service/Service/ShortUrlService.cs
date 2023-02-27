@@ -4,17 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UrlShortener.ApiService.Interface;
+using UrlShortener.ApiService.Utility;
 using UrlShortener.Common.Models;
+using UrlShortener.DAService.Context;
 
 namespace UrlShortener.ApiService.Service
 {
     public class ShortUrlService : IShortUrlService
     {
-        public readonly IUniqueIdGeneratorService _UniqueIdGenerator;
+        public readonly ShortUrlDbContext _ShortUrlDbContext;
+		public readonly IUniqueIdGeneratorService _UniqueIdGenerator;
 
-		public ShortUrlService(IUniqueIdGeneratorService uniqueIdGenerator)
+		public ShortUrlService(
+            IUniqueIdGeneratorService uniqueIdGenerator,
+			ShortUrlDbContext shortUrlDbContext)
         {
 			_UniqueIdGenerator = uniqueIdGenerator;
+            _ShortUrlDbContext = shortUrlDbContext;
 		}
 
         public List<ShortUrl> GetAll()
@@ -22,17 +28,35 @@ namespace UrlShortener.ApiService.Service
             throw new NotImplementedException();
         }
 
-        public string GetUniqueId(string Url)
+        public ShortUrl GetUniqueId(string UrlToBeShorten)
         {
-            // if found in redis do not go to db
-            // if not go to db
-            // save new url or return whatever id is saved
-			return _UniqueIdGenerator.GenerateNextId();
+			string urlToBeProcessed = string.Empty;
+
+			if (!UrlToBeShorten.IsValidUrl(out urlToBeProcessed))
+			{
+				throw new Exception("Please Provide correct URL");
+			}
+
+			ShortUrl oShortUrl = _ShortUrlDbContext.tblShortUrl.FirstOrDefault(item => item.MainUrl == urlToBeProcessed);
+
+			if (oShortUrl == null)
+			{
+				oShortUrl = new ShortUrl
+				{
+					ID = _UniqueIdGenerator.GenerateNextId(),
+					MainUrl = urlToBeProcessed
+				};
+
+				_ShortUrlDbContext.tblShortUrl.Add(oShortUrl);
+				_ShortUrlDbContext.SaveChangesAsync();
+			}
+
+			return oShortUrl;
 		}
 
-        public string GetUrl(string UniqueId)
+        public ShortUrl GetUrl(string UniqueId)
         {
-            throw new NotImplementedException();
-        }
+            return _ShortUrlDbContext.tblShortUrl.FirstOrDefault(item => item.ID == UniqueId);
+		}
     }
 }

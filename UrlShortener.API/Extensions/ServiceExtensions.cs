@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using UrlShortener.API.CustomMiddleware;
 using UrlShortener.ApiService.Interface;
 using UrlShortener.ApiService.Service;
 using UrlShortener.Common.ConfigurationModel;
+using UrlShortener.DAService.Context;
 
 namespace UrlShortener.API.Extensions
 {
@@ -24,7 +25,7 @@ namespace UrlShortener.API.Extensions
 
 		public static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.Configure<SnowFlakeConfigurationSettings>(configuration.GetSection("SnowFlakeConfigurationSettings"));
+			services.Configure<SnowFlakeConfigurationSettings>(configuration.GetSection(nameof(SnowFlakeConfigurationSettings)));
 		}
 
 		public static void ConfigureLoggerService(this IServiceCollection services)
@@ -38,8 +39,8 @@ namespace UrlShortener.API.Extensions
 		}
 
 		public static void ConfigureSqlDBContext(this IServiceCollection services, IConfiguration configuration) 
-		{ 
-
+		{
+			services.AddDbContext<ShortUrlDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(nameof(ShortUrlDbContext))));
 		}
 	}
 }

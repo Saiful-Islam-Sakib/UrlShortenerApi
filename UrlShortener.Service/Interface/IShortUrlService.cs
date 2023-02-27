@@ -10,7 +10,7 @@ namespace UrlShortener.ApiService.Interface
 	public interface IShortUrlService
 	{
 		List<ShortUrl> GetAll();
-		string GetUrl(string UniqueId);
-		string GetUniqueId(string Url);
+		ShortUrl GetUrl(string UniqueId);
+		ShortUrl GetUniqueId(string Url);
 	}
 }

@@ -8,7 +8,7 @@ namespace UrlShortener.Common.Models
 {
 	public class ShortUrl
 	{
-		public int ID { get; set; }
+		public string ID { get; set; }
 		public string MainUrl { get; set; }
 	}
 }
