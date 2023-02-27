@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using UrlShortener.API.CustomMiddleware;
 using UrlShortener.ApiService.Interface;
 using UrlShortener.ApiService.Service;
 using UrlShortener.Common.ConfigurationModel;
@@ -24,6 +25,16 @@ namespace UrlShortener.API.Extensions
 		public static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<SnowFlakeConfigurationSettings>(configuration.GetSection("SnowFlakeConfigurationSettings"));
+		}
+
+		public static void ConfigureLoggerService(this IServiceCollection services)
+		{
+			services.AddSingleton<ILoggerManagerService, LoggerManagerService>();
+		}
+
+		public static IApplicationBuilder UseProcessingTimeCalculatorMiddleware(this IApplicationBuilder builder)
+		{
+			return builder.UseMiddleware<ProcessingTimeCalculatorMiddleware>();
 		}
 
 		public static void ConfigureSqlDBContext(this IServiceCollection services, IConfiguration configuration) 

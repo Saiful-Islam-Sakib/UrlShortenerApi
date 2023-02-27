@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.ConfigureCors();
 builder.Services.ConfigureCommonService();
+builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureAppSettings(builder.Configuration);
 builder.Services.ConfigureSqlDBContext(builder.Configuration);
 
@@ -16,10 +17,16 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseCors();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/", () => "API Running !!!");
+
+app.UseProcessingTimeCalculatorMiddleware();
 
 app.Run();

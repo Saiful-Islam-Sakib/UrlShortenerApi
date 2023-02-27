@@ -22,7 +22,7 @@ namespace UrlShortener.ApiService.Service
             throw new NotImplementedException();
         }
 
-        public string MakeUniqueId(string Url)
+        public string GetUniqueId(string Url)
         {
             // if found in redis do not go to db
             // if not go to db
