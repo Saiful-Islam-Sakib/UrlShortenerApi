@@ -7,7 +7,7 @@ using UrlShortener.Common.Models;
 
 namespace UrlShortener.Common.Interface.Repository
 {
-	public interface IShortUrlRepository
+	public interface IShortUrlDBService
 	{
 		public void Save(ShortUrl shrtUrlsToBeSaved);
 		public ShortUrl GetByUrl(string url);

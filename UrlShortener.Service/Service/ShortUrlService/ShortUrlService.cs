@@ -8,16 +8,16 @@ namespace UrlShortener.Services.Service.ShortUrlService
 {
     public class ShortUrlService : IShortUrlService
     {
-        private readonly IShortUrlRepository _shortUrlDA;
+        private readonly IShortUrlDBService _shortUrlDA;
         private readonly IUniqueIdGeneratorService _uniqueIdGenerator;
 
-        public ShortUrlService(
+		public ShortUrlService(
             IUniqueIdGeneratorService uniqueIdGenerator,
-            IShortUrlRepository shortUrlRepository)
+            IShortUrlDBService ShortUrlDBService)
         {
             _uniqueIdGenerator = uniqueIdGenerator;
-            _shortUrlDA = shortUrlRepository;
-        }
+            _shortUrlDA = ShortUrlDBService;
+		}
 
         public List<ShortUrl> GetAll()
         {
@@ -26,33 +26,33 @@ namespace UrlShortener.Services.Service.ShortUrlService
 
         public ShortUrl GetUniqueId(string UrlToBeShorten)
         {
-            string urlToBeProcessed = string.Empty;
+			string urlToBeProcessed = string.Empty;
 
-            if (!UrlToBeShorten.IsValidUrl(out urlToBeProcessed))
+			if (!UrlToBeShorten.IsValidUrl(out urlToBeProcessed))
             {
                 throw new CustomInvalidException("Please Provide correct URL");
             }
 
-            ShortUrl oShortUrl = _shortUrlDA.GetByUrl(urlToBeProcessed);
+			ShortUrl oShortUrl = _shortUrlDA.GetByUrl(urlToBeProcessed);
 
             if (oShortUrl == null)
             {
-                oShortUrl = new ShortUrl
-                {
-                    ID = _uniqueIdGenerator.GenerateNextId(),
-                    Url = urlToBeProcessed
-                };
-                _shortUrlDA.Save(oShortUrl);
-            }
+				oShortUrl = new ShortUrl
+				{
+					ID = _uniqueIdGenerator.GenerateNextId(),
+					Url = urlToBeProcessed
+				};
+				_shortUrlDA.Save(oShortUrl);
+			}
 
-            return oShortUrl;
+			return oShortUrl;
         }
 
         public ShortUrl GetUrl(string UniqueId)
         {
             ShortUrl oShortUrl = _shortUrlDA.GetById(UniqueId);
 
-            return oShortUrl;
+			return oShortUrl;
         }
     }
 }

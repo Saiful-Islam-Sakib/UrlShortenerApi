@@ -4,7 +4,7 @@ using UrlShortener.Common.Interface;
 using UrlShortener.Common.ConfigurationModel;
 using UrlShortener.Repository.Context;
 using UrlShortener.Common.Interface.Repository;
-using UrlShortener.Repository.Service;
+using UrlShortener.DBServices.Service;
 using UrlShortener.Services.Service.LoggerService;
 using UrlShortener.Services.Service.ShortUrlService;
 using UrlShortener.Services.Service.HelperService;
@@ -28,7 +28,7 @@ namespace UrlShortener.API.Extensions
 			services.AddSingleton<IUniqueIdGeneratorService, UniqueIdGeneratorService>();
 
 			// repository layer
-			services.AddTransient<IShortUrlRepository, ShortUrlRepository>();
+			services.AddTransient<IShortUrlDBService, ShortUrlDBService>();
 		}
 
 		public static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
@@ -50,6 +50,11 @@ namespace UrlShortener.API.Extensions
 		{
 			services.AddDbContext<ShortUrlDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(nameof(ShortUrlDbContext)),
 				optionBuilder => optionBuilder.MigrationsAssembly("UrlShortener.API")));
+		}
+
+		public static void ConfigureRedisDBContext(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddStackExchangeRedisCache(options => options.Configuration = configuration.GetConnectionString("RedisDbContext"));
 		}
 	}
 }

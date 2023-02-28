@@ -13,6 +13,8 @@ builder.Services.ConfigureAppSettings(builder.Configuration);
 
 builder.Services.ConfigureSqlDBContext(builder.Configuration);
 
+builder.Services.ConfigureRedisDBContext(builder.Configuration);
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
