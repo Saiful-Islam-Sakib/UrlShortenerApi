@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using UrlShortener.ApiService.Interface;
+using UrlShortener.Common.CustomeException;
 using UrlShortener.Common.Models;
 
 namespace UrlShortener.API.Controllers
@@ -29,6 +30,11 @@ namespace UrlShortener.API.Controllers
 
 				return Ok(oShortUrl);
 			}
+			catch (InvalidUrlException ex)
+			{
+				_Logger.LogWarn(ex.Message);
+				return BadRequest(ex.Message);
+			}
 			catch (Exception ex)
 			{
 				_Logger.LogError(ex.Message);
@@ -49,6 +55,7 @@ namespace UrlShortener.API.Controllers
 		[Route("GetErrorMessage")]
 		public async Task<IActionResult> GetErrorMessage()
 		{
+			_Logger.LogWarn("No Url Found For The Id");
 			return BadRequest("No Url Found For The Id");
 		}
 	}

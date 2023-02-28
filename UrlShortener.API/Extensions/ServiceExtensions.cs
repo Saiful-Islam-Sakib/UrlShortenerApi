@@ -4,6 +4,8 @@ using UrlShortener.ApiService.Interface;
 using UrlShortener.ApiService.Service;
 using UrlShortener.Common.ConfigurationModel;
 using UrlShortener.DAService.Context;
+using UrlShortener.DAService.Interface;
+using UrlShortener.DAService.Service;
 
 namespace UrlShortener.API.Extensions
 {
@@ -19,8 +21,12 @@ namespace UrlShortener.API.Extensions
 
 		public static void ConfigureCommonService(this IServiceCollection services)
 		{
+			// service layer
 			services.AddTransient<IShortUrlService, ShortUrlService>();
 			services.AddSingleton<IUniqueIdGeneratorService, UniqueIdGeneratorService>();
+
+			// data access layer
+			services.AddTransient<IShortUrlDAService, ShortUrlDAService>();
 		}
 
 		public static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)

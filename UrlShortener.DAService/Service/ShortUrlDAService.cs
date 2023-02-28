@@ -10,7 +10,7 @@ using UrlShortener.DAService.Interface;
 
 namespace UrlShortener.DAService.Service
 {
-	internal class ShortUrlDAService : IShortUrlDAService
+	public class ShortUrlDAService : IShortUrlDAService
 	{
 		public readonly ShortUrlDbContext _ShortUrlDbContext;
 

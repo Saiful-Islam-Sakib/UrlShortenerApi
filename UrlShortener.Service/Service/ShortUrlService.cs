@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using UrlShortener.ApiService.Interface;
 using UrlShortener.ApiService.Utility;
 using UrlShortener.Common.Models;
-using UrlShortener.DAService.Context;
 using UrlShortener.DAService.Interface;
+using UrlShortener.Common.CustomeException;
 
 namespace UrlShortener.ApiService.Service
 {
     public class ShortUrlService : IShortUrlService
     {
-		private readonly IShortUrlDAService _ShortUrlDAService;
+		private readonly IShortUrlDAService _ShortUrlDA;
 		private readonly IUniqueIdGeneratorService _UniqueIdGenerator;
 
 		public ShortUrlService(
@@ -21,7 +21,7 @@ namespace UrlShortener.ApiService.Service
 			IShortUrlDAService shortUrlDAService)
         {
 			_UniqueIdGenerator = uniqueIdGenerator;
-			_ShortUrlDAService= shortUrlDAService;
+			_ShortUrlDA= shortUrlDAService;
 		}
 
         public List<ShortUrl> GetAll()
@@ -35,10 +35,10 @@ namespace UrlShortener.ApiService.Service
 
 			if (!UrlToBeShorten.IsValidUrl(out urlToBeProcessed))
 			{
-				throw new Exception("Please Provide correct URL");
+				throw new InvalidUrlException("Please Provide correct URL");
 			}
 
-			ShortUrl oShortUrl = _ShortUrlDAService.GetByUrl(urlToBeProcessed);
+			ShortUrl oShortUrl = _ShortUrlDA.GetByUrl(urlToBeProcessed);
 
 			if (oShortUrl == null)
 			{
@@ -47,7 +47,7 @@ namespace UrlShortener.ApiService.Service
 					ID = _UniqueIdGenerator.GenerateNextId(),
 					MainUrl = urlToBeProcessed
 				};
-				_ShortUrlDAService.Save(oShortUrl);
+				_ShortUrlDA.Save(oShortUrl);
 			}
 
 			return oShortUrl;
@@ -55,7 +55,7 @@ namespace UrlShortener.ApiService.Service
 
         public ShortUrl GetUrl(string UniqueId)
         {
-			ShortUrl oShortUrl = _ShortUrlDAService.GetById(UniqueId);
+			ShortUrl oShortUrl = _ShortUrlDA.GetById(UniqueId);
 
 			return oShortUrl;
 		}
