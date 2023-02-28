@@ -46,7 +46,8 @@ namespace UrlShortener.API.Extensions
 
 		public static void ConfigureSqlDBContext(this IServiceCollection services, IConfiguration configuration) 
 		{
-			services.AddDbContext<ShortUrlDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(nameof(ShortUrlDbContext))));
+			services.AddDbContext<ShortUrlDbContext>(options => options.UseSqlServer(configuration.GetConnectionString(nameof(ShortUrlDbContext)),
+				optionBuilder => optionBuilder.MigrationsAssembly("UrlShortener.API")));
 		}
 	}
 }
