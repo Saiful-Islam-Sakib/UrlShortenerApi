@@ -7,20 +7,21 @@ using UrlShortener.ApiService.Interface;
 using UrlShortener.ApiService.Utility;
 using UrlShortener.Common.Models;
 using UrlShortener.DAService.Context;
+using UrlShortener.DAService.Interface;
 
 namespace UrlShortener.ApiService.Service
 {
     public class ShortUrlService : IShortUrlService
     {
-        public readonly ShortUrlDbContext _ShortUrlDbContext;
-		public readonly IUniqueIdGeneratorService _UniqueIdGenerator;
+		private readonly IShortUrlDAService _ShortUrlDAService;
+		private readonly IUniqueIdGeneratorService _UniqueIdGenerator;
 
 		public ShortUrlService(
             IUniqueIdGeneratorService uniqueIdGenerator,
-			ShortUrlDbContext shortUrlDbContext)
+			IShortUrlDAService shortUrlDAService)
         {
 			_UniqueIdGenerator = uniqueIdGenerator;
-            _ShortUrlDbContext = shortUrlDbContext;
+			_ShortUrlDAService= shortUrlDAService;
 		}
 
         public List<ShortUrl> GetAll()
@@ -37,7 +38,7 @@ namespace UrlShortener.ApiService.Service
 				throw new Exception("Please Provide correct URL");
 			}
 
-			ShortUrl oShortUrl = _ShortUrlDbContext.tblShortUrl.FirstOrDefault(item => item.MainUrl == urlToBeProcessed);
+			ShortUrl oShortUrl = _ShortUrlDAService.GetByUrl(urlToBeProcessed);
 
 			if (oShortUrl == null)
 			{
@@ -46,9 +47,7 @@ namespace UrlShortener.ApiService.Service
 					ID = _UniqueIdGenerator.GenerateNextId(),
 					MainUrl = urlToBeProcessed
 				};
-
-				_ShortUrlDbContext.tblShortUrl.Add(oShortUrl);
-				_ShortUrlDbContext.SaveChangesAsync();
+				_ShortUrlDAService.Save(oShortUrl);
 			}
 
 			return oShortUrl;
@@ -56,7 +55,9 @@ namespace UrlShortener.ApiService.Service
 
         public ShortUrl GetUrl(string UniqueId)
         {
-            return _ShortUrlDbContext.tblShortUrl.FirstOrDefault(item => item.ID == UniqueId);
+			ShortUrl oShortUrl = _ShortUrlDAService.GetById(UniqueId);
+
+			return oShortUrl;
 		}
     }
 }

@@ -9,8 +9,8 @@ namespace UrlShortener.DAService.Interface
 {
 	public interface IShortUrlDAService
 	{
-		public void Save(List<ShortUrl> shrtUrlsToBeSaved);
-		public void GetUrl(string id);
-		public void GetId(string url);
+		public void Save(ShortUrl shrtUrlsToBeSaved);
+		public ShortUrl GetByUrl(string url);
+		public ShortUrl GetById(string url);
 	}
 }

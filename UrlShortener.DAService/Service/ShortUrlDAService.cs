@@ -3,26 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using UrlShortener.Common.Models;
+using UrlShortener.DAService.Context;
 using UrlShortener.DAService.Interface;
 
 namespace UrlShortener.DAService.Service
 {
 	internal class ShortUrlDAService : IShortUrlDAService
 	{
-		public void GetId(string url)
+		public readonly ShortUrlDbContext _ShortUrlDbContext;
+
+		public ShortUrlDAService(ShortUrlDbContext shortUrlDbContext)
 		{
-			throw new NotImplementedException();
+			_ShortUrlDbContext = shortUrlDbContext;
 		}
 
-		public void GetUrl(string id)
+		public ShortUrl GetById(string id)
 		{
-			throw new NotImplementedException();
+			ShortUrl oShortUrl = _ShortUrlDbContext.tblShortUrl.FirstOrDefault(item => item.ID == id);
+			return oShortUrl;
 		}
 
-		public void Save(List<ShortUrl> shrtUrlsToBeSaved)
+		public ShortUrl GetByUrl(string url)
 		{
-			throw new NotImplementedException();
+			ShortUrl oShortUrl = _ShortUrlDbContext.tblShortUrl.FirstOrDefault(item => item.MainUrl == url);
+			return oShortUrl;
+		}
+
+		public void Save(ShortUrl shrtUrlsToBeSaved)
+		{
+			_ShortUrlDbContext.tblShortUrl.Add(shrtUrlsToBeSaved);
+			_ShortUrlDbContext.SaveChangesAsync();
 		}
 	}
 }
