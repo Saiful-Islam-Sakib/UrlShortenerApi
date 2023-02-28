@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UrlShortener.Common.Models;
 
-namespace UrlShortener.DAService.Interface
+namespace UrlShortener.Common.Interface.Repository
 {
-	public interface IShortUrlDAService
+	public interface IShortUrlRepository
 	{
 		public void Save(ShortUrl shrtUrlsToBeSaved);
 		public ShortUrl GetByUrl(string url);

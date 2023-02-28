@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UrlShortener.API.CustomMiddleware;
-using UrlShortener.ApiService.Interface;
-using UrlShortener.ApiService.Service;
+using UrlShortener.Common.Interface;
 using UrlShortener.Common.ConfigurationModel;
-using UrlShortener.DAService.Context;
-using UrlShortener.DAService.Interface;
-using UrlShortener.DAService.Service;
+using UrlShortener.Repository.Context;
+using UrlShortener.Common.Interface.Repository;
+using UrlShortener.Repository.Service;
+using UrlShortener.Services.Service.LoggerService;
+using UrlShortener.Services.Service.ShortUrlService;
+using UrlShortener.Services.Service.HelperService;
 
 namespace UrlShortener.API.Extensions
 {
@@ -26,7 +28,7 @@ namespace UrlShortener.API.Extensions
 			services.AddSingleton<IUniqueIdGeneratorService, UniqueIdGeneratorService>();
 
 			// data access layer
-			services.AddTransient<IShortUrlDAService, ShortUrlDAService>();
+			services.AddTransient<IShortUrlRepository, ShortUrlRepository>();
 		}
 
 		public static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)

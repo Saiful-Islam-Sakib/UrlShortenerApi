@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UrlShortener.Common.Models;
 
-namespace UrlShortener.DAService.Context
+namespace UrlShortener.Repository.Context
 {
 	public class ShortUrlDbContext: DbContext
 	{
 		public ShortUrlDbContext(DbContextOptions options) : base(options) { }
-		public DbSet<ShortUrl>? tblShortUrl { get; set; }
+		public DbSet<ShortUrl>? ShortUrl { get; set; }
 	}
 }

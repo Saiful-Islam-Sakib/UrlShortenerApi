@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using UrlShortener.ApiService.Interface;
+using UrlShortener.Common.Interface;
 using UrlShortener.Common.CustomeException;
 using UrlShortener.Common.Models;
 
@@ -48,7 +48,7 @@ namespace UrlShortener.API.Controllers
 		{
 			ShortUrl oShortUrl = _ShortUrl.GetUrl(IdOfTheUrl);
 
-			return oShortUrl != null ? RedirectPermanent(oShortUrl.MainUrl) : RedirectPermanent("~/UrlShortener/GetErrorMessage");
+			return oShortUrl != null ? RedirectPermanent(oShortUrl.Url) : RedirectPermanent("~/UrlShortener/GetErrorMessage");
 		}
 
 		[HttpGet]

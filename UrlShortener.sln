@@ -5,11 +5,11 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlShortener.API", "UrlShortener.API\UrlShortener.API.csproj", "{9D020585-4C08-4F4C-970F-4B415E22A42A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlShortener.Common", "UrlShortener.Common\UrlShortener.Common.csproj", "{76451F7F-4DCF-4EB4-9827-7709FCE7B85B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlShortener.Shared", "UrlShortener.Common\UrlShortener.Shared.csproj", "{76451F7F-4DCF-4EB4-9827-7709FCE7B85B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlShortener.ApiService", "UrlShortener.Service\UrlShortener.ApiService.csproj", "{4FD7F2D2-13AF-4181-A211-3CCAAA5DF773}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlShortener.Services", "UrlShortener.Service\UrlShortener.Services.csproj", "{4FD7F2D2-13AF-4181-A211-3CCAAA5DF773}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlShortener.DAService", "UrlShortener.DAService\UrlShortener.DAService.csproj", "{132EE5C1-1A45-4AE8-9C96-6C994A075AF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlShortener.Repository", "UrlShortener.DAService\UrlShortener.Repository.csproj", "{132EE5C1-1A45-4AE8-9C96-6C994A075AF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

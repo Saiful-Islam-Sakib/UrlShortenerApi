@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using UrlShortener.ApiService.Interface;
+using UrlShortener.Common.Interface;
 
 namespace UrlShortener.API.CustomMiddleware
 {

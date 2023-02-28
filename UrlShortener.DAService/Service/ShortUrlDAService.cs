@@ -5,35 +5,35 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using UrlShortener.Common.Models;
-using UrlShortener.DAService.Context;
-using UrlShortener.DAService.Interface;
+using UrlShortener.Common.Interface.Repository;
+using UrlShortener.Repository.Context;
 
-namespace UrlShortener.DAService.Service
+namespace UrlShortener.Repository.Service
 {
-	public class ShortUrlDAService : IShortUrlDAService
+	public class ShortUrlRepository : IShortUrlRepository
 	{
 		public readonly ShortUrlDbContext _ShortUrlDbContext;
 
-		public ShortUrlDAService(ShortUrlDbContext shortUrlDbContext)
+		public ShortUrlRepository(ShortUrlDbContext shortUrlDbContext)
 		{
 			_ShortUrlDbContext = shortUrlDbContext;
 		}
 
 		public ShortUrl GetById(string id)
 		{
-			ShortUrl oShortUrl = _ShortUrlDbContext.tblShortUrl.FirstOrDefault(item => item.ID == id);
+			ShortUrl oShortUrl = _ShortUrlDbContext.ShortUrl.FirstOrDefault(item => item.ID == id);
 			return oShortUrl;
 		}
 
 		public ShortUrl GetByUrl(string url)
 		{
-			ShortUrl oShortUrl = _ShortUrlDbContext.tblShortUrl.FirstOrDefault(item => item.MainUrl == url);
+			ShortUrl oShortUrl = _ShortUrlDbContext.ShortUrl.FirstOrDefault(item => item.Url == url);
 			return oShortUrl;
 		}
 
 		public void Save(ShortUrl shrtUrlsToBeSaved)
 		{
-			_ShortUrlDbContext.tblShortUrl.Add(shrtUrlsToBeSaved);
+			_ShortUrlDbContext.ShortUrl.Add(shrtUrlsToBeSaved);
 			_ShortUrlDbContext.SaveChangesAsync();
 		}
 	}
