@@ -49,7 +49,7 @@ namespace UrlShortener.API.Controllers
 		[Route("GetErrorMessage")]
 		public async Task<IActionResult> GetErrorMessage()
 		{
-			return StatusCode(StatusCodes.Status500InternalServerError, "No Url Found For The Id");
+			return BadRequest("No Url Found For The Id");
 		}
 	}
 }

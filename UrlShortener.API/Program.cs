@@ -4,9 +4,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.ConfigureCors();
+
 builder.Services.ConfigureCommonService();
+
 builder.Services.ConfigureLoggerService();
+
 builder.Services.ConfigureAppSettings(builder.Configuration);
+
 builder.Services.ConfigureSqlDBContext(builder.Configuration);
 
 builder.Services.AddControllers();
