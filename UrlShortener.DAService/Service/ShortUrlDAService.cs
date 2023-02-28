@@ -12,29 +12,29 @@ namespace UrlShortener.Repository.Service
 {
 	public class ShortUrlRepository : IShortUrlRepository
 	{
-		public readonly ShortUrlDbContext _ShortUrlDbContext;
+		public readonly ShortUrlDbContext _shortUrlDbContext;
 
 		public ShortUrlRepository(ShortUrlDbContext shortUrlDbContext)
 		{
-			_ShortUrlDbContext = shortUrlDbContext;
+			_shortUrlDbContext = shortUrlDbContext;
 		}
 
 		public ShortUrl GetById(string id)
 		{
-			ShortUrl oShortUrl = _ShortUrlDbContext.ShortUrl.FirstOrDefault(item => item.ID == id);
+			ShortUrl oShortUrl = _shortUrlDbContext.ShortUrl.FirstOrDefault(item => item.ID == id);
 			return oShortUrl;
 		}
 
 		public ShortUrl GetByUrl(string url)
 		{
-			ShortUrl oShortUrl = _ShortUrlDbContext.ShortUrl.FirstOrDefault(item => item.Url == url);
+			ShortUrl oShortUrl = _shortUrlDbContext.ShortUrl.FirstOrDefault(item => item.Url == url);
 			return oShortUrl;
 		}
 
 		public void Save(ShortUrl shrtUrlsToBeSaved)
 		{
-			_ShortUrlDbContext.ShortUrl.Add(shrtUrlsToBeSaved);
-			_ShortUrlDbContext.SaveChangesAsync();
+			_shortUrlDbContext.ShortUrl.Add(shrtUrlsToBeSaved);
+			_shortUrlDbContext.SaveChangesAsync();
 		}
 	}
 }

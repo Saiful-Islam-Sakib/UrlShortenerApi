@@ -11,15 +11,15 @@ namespace UrlShortener.API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "tblShortUrl",
+                name: "ShortUrl",
                 columns: table => new
                 {
                     ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MainUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tblShortUrl", x => x.ID);
+                    table.PrimaryKey("PK_ShortUrl", x => x.ID);
                 });
         }
 
@@ -27,7 +27,7 @@ namespace UrlShortener.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "tblShortUrl");
+                name: "ShortUrl");
         }
     }
 }

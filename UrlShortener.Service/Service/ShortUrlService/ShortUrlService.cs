@@ -8,15 +8,15 @@ namespace UrlShortener.Services.Service.ShortUrlService
 {
     public class ShortUrlService : IShortUrlService
     {
-        private readonly IShortUrlRepository _ShortUrlDA;
-        private readonly IUniqueIdGeneratorService _UniqueIdGenerator;
+        private readonly IShortUrlRepository _shortUrlDA;
+        private readonly IUniqueIdGeneratorService _uniqueIdGenerator;
 
         public ShortUrlService(
             IUniqueIdGeneratorService uniqueIdGenerator,
             IShortUrlRepository shortUrlRepository)
         {
-            _UniqueIdGenerator = uniqueIdGenerator;
-            _ShortUrlDA = shortUrlRepository;
+            _uniqueIdGenerator = uniqueIdGenerator;
+            _shortUrlDA = shortUrlRepository;
         }
 
         public List<ShortUrl> GetAll()
@@ -30,19 +30,19 @@ namespace UrlShortener.Services.Service.ShortUrlService
 
             if (!UrlToBeShorten.IsValidUrl(out urlToBeProcessed))
             {
-                throw new InvalidUrlException("Please Provide correct URL");
+                throw new CustomInvalidException("Please Provide correct URL");
             }
 
-            ShortUrl oShortUrl = _ShortUrlDA.GetByUrl(urlToBeProcessed);
+            ShortUrl oShortUrl = _shortUrlDA.GetByUrl(urlToBeProcessed);
 
             if (oShortUrl == null)
             {
                 oShortUrl = new ShortUrl
                 {
-                    ID = _UniqueIdGenerator.GenerateNextId(),
+                    ID = _uniqueIdGenerator.GenerateNextId(),
                     Url = urlToBeProcessed
                 };
-                _ShortUrlDA.Save(oShortUrl);
+                _shortUrlDA.Save(oShortUrl);
             }
 
             return oShortUrl;
@@ -50,7 +50,7 @@ namespace UrlShortener.Services.Service.ShortUrlService
 
         public ShortUrl GetUrl(string UniqueId)
         {
-            ShortUrl oShortUrl = _ShortUrlDA.GetById(UniqueId);
+            ShortUrl oShortUrl = _shortUrlDA.GetById(UniqueId);
 
             return oShortUrl;
         }

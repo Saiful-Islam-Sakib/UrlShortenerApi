@@ -27,7 +27,7 @@ namespace UrlShortener.API.Extensions
 			services.AddTransient<IShortUrlService, ShortUrlService>();
 			services.AddSingleton<IUniqueIdGeneratorService, UniqueIdGeneratorService>();
 
-			// data access layer
+			// repository layer
 			services.AddTransient<IShortUrlRepository, ShortUrlRepository>();
 		}
 

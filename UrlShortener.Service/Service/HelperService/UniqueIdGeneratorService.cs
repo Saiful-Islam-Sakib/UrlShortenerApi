@@ -6,38 +6,61 @@ namespace UrlShortener.Services.Service.HelperService
 {
     public class UniqueIdGeneratorService : IUniqueIdGeneratorService
     {
-        private readonly IOptions<SnowFlakeConfigurationSettings> _SnowFlakeConfigurationSettings;
         private SnowFlakeConfigurationSettings _oSnowFlakeConfigurationSettings;
+		private readonly IOptions<SnowFlakeConfigurationSettings> _snowFlakeConfigurationSettings;
         private readonly object _lockingObject = new object();
-        private long _MaxMachineId;
-        private long _MaxSequenceId;
+        private readonly long _maxMachineId;
+        private readonly long _maxSequenceId;
+        private static long _lasttimeStamp;
+        private static long _sequenceId;
 
-        public UniqueIdGeneratorService(IOptions<SnowFlakeConfigurationSettings> snowFlakeSettings)
+
+		public UniqueIdGeneratorService(IOptions<SnowFlakeConfigurationSettings> snowFlakeSettings)
         {
-            _SnowFlakeConfigurationSettings = snowFlakeSettings;
-            _oSnowFlakeConfigurationSettings = _SnowFlakeConfigurationSettings.Value;
-            _MaxMachineId = -1L ^ -1L << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInMachineId;
-            _MaxSequenceId = -1L ^ -1L << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId;
+            _snowFlakeConfigurationSettings = snowFlakeSettings;
+            _oSnowFlakeConfigurationSettings = _snowFlakeConfigurationSettings.Value;
+            _maxMachineId = -1L ^ -1L << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInMachineId;
+            _maxSequenceId = -1L ^ -1L << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId;
         }
 
         private void Validate(SnowFlakeConfigurationSettings pSnowFlakeConfigurationSettings)
         {
             try
             {
-                if (pSnowFlakeConfigurationSettings.InitialMachineId > _MaxMachineId || pSnowFlakeConfigurationSettings.InitialMachineId < 0)
+                if (pSnowFlakeConfigurationSettings.InitialMachineId > _maxMachineId || pSnowFlakeConfigurationSettings.InitialMachineId < 0)
                 {
-                    throw new ArgumentException($"machine ID must be between 0 and {_MaxMachineId}");
+                    throw new ArgumentException($"machine ID must be between 0 and {_maxMachineId}");
                 }
 
-                if (pSnowFlakeConfigurationSettings.InitialSequenceId > _MaxSequenceId || pSnowFlakeConfigurationSettings.InitialSequenceId < 0)
+                if (pSnowFlakeConfigurationSettings.InitialSequenceId > _maxSequenceId || pSnowFlakeConfigurationSettings.InitialSequenceId < 0)
                 {
-                    throw new ArgumentException($"Sequence ID must be between 0 and {_MaxSequenceId}");
+                    throw new ArgumentException($"Sequence ID must be between 0 and {_maxSequenceId}");
                 }
             }
             catch (Exception)
             {
                 throw;
             }
+        }
+
+		private string ConvertToBase62(long idToBeComverted)
+        {
+			string _base62Data = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            int newBase = 62;
+
+            int temporaryRemainder = 0;
+            string convertedBase62Id = string.Empty;
+
+			while (idToBeComverted != 0)
+            {
+				temporaryRemainder = (int)(idToBeComverted % newBase);
+
+                convertedBase62Id = _base62Data[temporaryRemainder].ToString() + convertedBase62Id;
+
+				idToBeComverted /= newBase;
+			}
+
+			return convertedBase62Id;
         }
 
         public string GenerateNextId()
@@ -48,12 +71,19 @@ namespace UrlShortener.Services.Service.HelperService
 
                 lock (_lockingObject)
                 {
-                    long timeStamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds() << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInMachineId + _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId;
-                    long result = timeStamp | _oSnowFlakeConfigurationSettings.InitialMachineId << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId | _oSnowFlakeConfigurationSettings.InitialSequenceId;
-                    _oSnowFlakeConfigurationSettings.InitialMachineId++;
-                    _oSnowFlakeConfigurationSettings.InitialSequenceId++;
+                    long timeStamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeMilliseconds();
 
-                    return Convert.ToString(result, 16);
+					long machineId = _oSnowFlakeConfigurationSettings.InitialMachineId << _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId;
+
+                    _sequenceId = _lasttimeStamp == timeStamp ? _maxSequenceId & (_sequenceId + 1) : _oSnowFlakeConfigurationSettings.InitialSequenceId;
+
+					_lasttimeStamp = timeStamp;
+
+                    timeStamp <<= (_oSnowFlakeConfigurationSettings.MaxNumberOfBitsInMachineId + _oSnowFlakeConfigurationSettings.MaxNumberOfBitsInSequenceId);
+
+					long resultingId = timeStamp | machineId | _sequenceId;
+
+					return ConvertToBase62(resultingId);
                 }
             }
             catch (Exception)

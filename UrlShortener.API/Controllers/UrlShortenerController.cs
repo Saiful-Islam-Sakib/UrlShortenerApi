@@ -9,15 +9,15 @@ namespace UrlShortener.API.Controllers
 	[Route("UrlShortener")]
 	public class UrlShortenerController : ControllerBase
 	{
-		private readonly IShortUrlService _ShortUrl;
-		private readonly ILoggerManagerService _Logger;
+		private readonly IShortUrlService _shortUrl;
+		private readonly ILoggerManagerService _logger;
 
 		public UrlShortenerController(
 			IShortUrlService shortUrl, 
 			ILoggerManagerService logger)
 		{
-			_ShortUrl = shortUrl;
-			_Logger = logger;
+			_shortUrl = shortUrl;
+			_logger = logger;
 		}
 
 		[HttpPost]
@@ -26,18 +26,18 @@ namespace UrlShortener.API.Controllers
 		{
 			try
 			{
-				ShortUrl oShortUrl = _ShortUrl.GetUniqueId(UrlToBeShorten);
+				ShortUrl oShortUrl = _shortUrl.GetUniqueId(UrlToBeShorten);
 
 				return Ok(oShortUrl);
 			}
-			catch (InvalidUrlException ex)
+			catch (CustomInvalidException ex)
 			{
-				_Logger.LogWarn(ex.Message);
+				_logger.LogWarn(ex.Message);
 				return BadRequest(ex.Message);
 			}
 			catch (Exception ex)
 			{
-				_Logger.LogError(ex.Message);
+				_logger.LogError(ex.Message);
 				return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
 			}
 		}
@@ -46,7 +46,7 @@ namespace UrlShortener.API.Controllers
 		[Route("GetUrl/{IdOfTheUrl}")]
 		public async Task<RedirectResult> GetUrl(string IdOfTheUrl)
 		{
-			ShortUrl oShortUrl = _ShortUrl.GetUrl(IdOfTheUrl);
+			ShortUrl oShortUrl = _shortUrl.GetUrl(IdOfTheUrl);
 
 			return oShortUrl != null ? RedirectPermanent(oShortUrl.Url) : RedirectPermanent("~/UrlShortener/GetErrorMessage");
 		}
@@ -55,7 +55,7 @@ namespace UrlShortener.API.Controllers
 		[Route("GetErrorMessage")]
 		public async Task<IActionResult> GetErrorMessage()
 		{
-			_Logger.LogWarn("No Url Found For The Id");
+			_logger.LogWarn("No Url Found For The Id");
 			return BadRequest("No Url Found For The Id");
 		}
 	}

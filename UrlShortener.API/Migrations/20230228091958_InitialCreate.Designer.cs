@@ -11,7 +11,7 @@ using UrlShortener.Repository.Context;
 namespace UrlShortener.API.Migrations
 {
     [DbContext(typeof(ShortUrlDbContext))]
-    [Migration("20230227123935_InitialCreate")]
+    [Migration("20230228091958_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -29,13 +29,13 @@ namespace UrlShortener.API.Migrations
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("MainUrl")
+                    b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
-                    b.ToTable("tblShortUrl");
+                    b.ToTable("ShortUrl");
                 });
 #pragma warning restore 612, 618
         }

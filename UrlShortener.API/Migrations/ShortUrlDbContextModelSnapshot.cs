@@ -26,13 +26,13 @@ namespace UrlShortener.API.Migrations
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("MainUrl")
+                    b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
-                    b.ToTable("tblShortUrl");
+                    b.ToTable("ShortUrl");
                 });
 #pragma warning restore 612, 618
         }
