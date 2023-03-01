@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UrlShortener.Common\UrlShortener.Shared.csproj" />
-    <ProjectReference Include="..\UrlShortener.DAService\UrlShortener.Repository.csproj" />
+    <ProjectReference Include="..\UrlShortener.Repository\UrlShortener.Repository.csproj" />
+    <ProjectReference Include="..\UrlShortener.Shared\UrlShortener.Shared.csproj" />
   </ItemGroup>
 
 </Project>

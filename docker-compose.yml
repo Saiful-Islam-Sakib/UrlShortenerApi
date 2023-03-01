@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  urlshortener.api:
+    image: urlshortener.api
+    container_name: urlshortener.api
+    ports:
+      - "7144:80"
+  sql:
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    container_name: sqlserverdb
+    ports:
+      - "1450:1433"
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=Reli1@3$5
+  redis:
+    image: redis
+    container_name: myredis
+    ports:
+      - "6380:6379"
