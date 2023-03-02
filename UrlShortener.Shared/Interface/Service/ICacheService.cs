@@ -2,8 +2,8 @@
 {
 	public interface ICacheService
 	{
-		T GetData<T>(string key) where T : class;
-		bool SetData<T>(string key, T value, DateTime expirationTime) where T : class;
-		T RemoveData<T>(string key) where T : class;
+		T? GetData<T>(string key, Func<T> dbOperation) where T : class;
+		void SetData<T>(string key, T value, Func<T> dbOperation) where T : class;
+		void RemoveData<T>(string key, Func<T> dbOperation) where T : class;
 	}
 }

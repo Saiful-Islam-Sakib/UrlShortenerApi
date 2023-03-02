@@ -8,7 +8,7 @@ using UrlShortener.DBServices.Service;
 using UrlShortener.Services.Service.LoggerService;
 using UrlShortener.Services.Service.ShortUrlService;
 using UrlShortener.Services.Service.HelperService;
-using UrlShortener.Services.Service.CachingService;
+using UrlShortener.Services.Service.CachingManagerService;
 
 namespace UrlShortener.API.Extensions
 {
@@ -34,11 +34,11 @@ namespace UrlShortener.API.Extensions
 			// Logger
 			services.AddSingleton<ILoggerManagerService, LoggerManagerService>();
 
-			// caching
-			services.AddScoped<ICacheService, CacheService>();
+			// caching microsoft distributed caching
+			services.AddSingleton<ICacheService, CacheManagerService>();
 		}
 
-		public static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
+		public static void ConfigureSnowflakeSettings(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<SnowFlakeConfigurationSettings>(configuration.GetSection(nameof(SnowFlakeConfigurationSettings)));
 		}
@@ -56,7 +56,13 @@ namespace UrlShortener.API.Extensions
 
 		public static void ConfigureRedisDBContext(this IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddStackExchangeRedisCache(options => options.Configuration = configuration.GetConnectionString("RedisDbContext"));
+			services.AddStackExchangeRedisCache(options =>
+			{
+				options.Configuration = configuration.GetConnectionString("RedisDbContext");
+				// other options like
+				// user and pass
+				// timeout
+			});
 		}
 	}
 }

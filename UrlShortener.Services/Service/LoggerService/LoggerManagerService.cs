@@ -6,10 +6,12 @@ namespace UrlShortener.Services.Service.LoggerService
 {
     public class LoggerManagerService : ILoggerManagerService
     {
-        private static IConfiguration configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
+        private static ILogger? _logger;
 
-        private static ILogger _logger = new LoggerConfiguration().ReadFrom.Configuration(configuration, sectionName: "Serilog").CreateLogger();
-
+        public LoggerManagerService(IConfiguration configuration)
+        {
+            _logger = new LoggerConfiguration().ReadFrom.Configuration(configuration, sectionName: nameof(Serilog)).CreateLogger();
+		}
         public void LogDebug(string message) => _logger.Debug(message);
 
         public void LogError(string message) => _logger.Error(message);

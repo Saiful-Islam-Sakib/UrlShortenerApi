@@ -5,9 +5,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.ConfigureCors();
 
+builder.Services.AddDistributedMemoryCache();
+
 builder.Services.ConfigureCommonService();
 
-builder.Services.ConfigureAppSettings(builder.Configuration);
+builder.Services.ConfigureSnowflakeSettings(builder.Configuration);
 
 builder.Services.ConfigureSqlDBContext(builder.Configuration);
 
