@@ -8,6 +8,7 @@ using UrlShortener.DBServices.Service;
 using UrlShortener.Services.Service.LoggerService;
 using UrlShortener.Services.Service.ShortUrlService;
 using UrlShortener.Services.Service.HelperService;
+using UrlShortener.Services.Service.CachingService;
 
 namespace UrlShortener.API.Extensions
 {
@@ -28,17 +29,18 @@ namespace UrlShortener.API.Extensions
 			services.AddSingleton<IUniqueIdGeneratorService, UniqueIdGeneratorService>();
 
 			// repository layer
-			services.AddTransient<IShortUrlDBService, ShortUrlDBService>();
+			services.AddScoped<IShortUrlDBService, ShortUrlDBService>();
+
+			// Logger
+			services.AddSingleton<ILoggerManagerService, LoggerManagerService>();
+
+			// caching
+			services.AddScoped<ICacheService, CacheService>();
 		}
 
 		public static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.Configure<SnowFlakeConfigurationSettings>(configuration.GetSection(nameof(SnowFlakeConfigurationSettings)));
-		}
-
-		public static void ConfigureLoggerService(this IServiceCollection services)
-		{
-			services.AddSingleton<ILoggerManagerService, LoggerManagerService>();
 		}
 
 		public static IApplicationBuilder UseProcessingTimeCalculatorMiddleware(this IApplicationBuilder builder)

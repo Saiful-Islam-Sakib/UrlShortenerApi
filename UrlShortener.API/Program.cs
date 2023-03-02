@@ -7,13 +7,9 @@ builder.Services.ConfigureCors();
 
 builder.Services.ConfigureCommonService();
 
-builder.Services.ConfigureLoggerService();
-
 builder.Services.ConfigureAppSettings(builder.Configuration);
 
 builder.Services.ConfigureSqlDBContext(builder.Configuration);
-
-builder.Services.ConfigureRedisDBContext(builder.Configuration);
 
 builder.Services.AddControllers();
 
