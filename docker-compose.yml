@@ -2,10 +2,10 @@ version: '3.4'
 
 services:
   urlshortener.api:
-    image: urlshortener.api
-    container_name: urlshortener.api
-    ports:
-      - "7144:80"
+    image: ${DOCKER_REGISTRY-}urlshortenerapi
+    build:
+      context: .
+      dockerfile: UrlShortener.API/Dockerfile
   sql:
     image: "mcr.microsoft.com/mssql/server:2019-latest"
     container_name: sqlserverdb
@@ -13,7 +13,7 @@ services:
       - "1450:1433"
     environment:
       - ACCEPT_EULA=y
-      - SA_PASSWORD=Reli1@3$5
+      - SA_PASSWORD=Reli!@#456
   redis:
     image: redis
     container_name: myredis
