@@ -13,6 +13,8 @@ namespace UrlShortener.Services.Service.CachingManagerService
         
         public CacheManagerService(IConfiguration configuration, IDistributedCache distributedCache)
         {
+			// configure which cache to be loaded
+			// currently it is using microsoft distributed cache
             _distributedCache = distributedCache;
 		}
 
