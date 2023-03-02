@@ -1,24 +1,25 @@
 ﻿using UrlShortener.Common.Models;
 using UrlShortener.Common.Interface.Repository;
 using UrlShortener.Repository.Context;
-using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
-using UrlShortener.Services.Service.CachingManagerService;
 using UrlShortener.Common.Interface;
+using UrlShortener.Shared.Enums;
+using Microsoft.Extensions.Configuration;
 
 namespace UrlShortener.DBServices.Service
 {
 	public class ShortUrlDBService : IShortUrlDBService
 	{
-		public readonly ShortUrlDbContext _shortUrlDbContext;
-		public readonly ICacheService _cacheService;
+		private readonly ShortUrlDbContext _shortUrlDbContext;
+		private readonly ICacheService _cacheService;
+		private readonly ICacheFactory _cacheFactory;
 
 		public ShortUrlDBService(
 			ShortUrlDbContext shortUrlDbContext,
-			ICacheService cacheManagerService)
+			ICacheFactory cacheFactory)
 		{
 			_shortUrlDbContext = shortUrlDbContext;
-			_cacheService = cacheManagerService;
+			_cacheFactory = cacheFactory;
+			_cacheService = _cacheFactory.GetCacheProvide();
 		}
 
 		public ShortUrl GetById(string id)

@@ -9,9 +9,15 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.ConfigureCommonService();
 
+builder.Services.ConfigureCachingServices(builder.Configuration);
+
 builder.Services.ConfigureSnowflakeSettings(builder.Configuration);
 
+builder.Services.ConfigureCacheSettings(builder.Configuration);
+
 builder.Services.ConfigureSqlDBContext(builder.Configuration);
+
+builder.Services.ConfigureRedisDBContext(builder.Configuration);
 
 builder.Services.AddControllers();
 

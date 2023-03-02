@@ -1,20 +1,16 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UrlShortener.Common.Interface;
-using UrlShortener.Common.Models;
 
-namespace UrlShortener.Services.Service.CachingManagerService
+namespace UrlShortener.Services.Service.CachingService
 {
-    public class CacheManagerService : ICacheService
+    public class RedisCacheManagerService : ICacheService
     {
 		private readonly IDistributedCache _distributedCache;
         
-        public CacheManagerService(IConfiguration configuration, IDistributedCache distributedCache)
+        public RedisCacheManagerService(IDistributedCache distributedCache)
         {
-			// configure which cache to be loaded
-			// currently it is using microsoft distributed cache
             _distributedCache = distributedCache;
 		}
 
