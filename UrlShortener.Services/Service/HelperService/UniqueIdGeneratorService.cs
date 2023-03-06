@@ -43,7 +43,7 @@ namespace UrlShortener.Services.Service.HelperService
             }
         }
 
-		private string ConvertToBase62(long idToBeComverted)
+		private string ConvertToBase62(long idToBeConverted)
         {
 			string _base62Data = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             int newBase = 62;
@@ -51,13 +51,13 @@ namespace UrlShortener.Services.Service.HelperService
             int temporaryRemainder = 0;
             string convertedBase62Id = string.Empty;
 
-			while (idToBeComverted != 0)
+			while (idToBeConverted != 0)
             {
-				temporaryRemainder = (int)(idToBeComverted % newBase);
+				temporaryRemainder = (int)(idToBeConverted % newBase);
 
                 convertedBase62Id = _base62Data[temporaryRemainder].ToString() + convertedBase62Id;
 
-				idToBeComverted /= newBase;
+				idToBeConverted /= newBase;
 			}
 
 			return convertedBase62Id;
